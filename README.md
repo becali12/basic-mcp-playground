@@ -1,12 +1,27 @@
-# github-mcp-app
+# simple-mcp-playground
 
-A conversational AI agent that uses the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) to give GPT-4o access to real-time weather data and GitHub information.
+A conversational AI agent powered by GPT-4o and the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). The agent connects to multiple MCP servers at startup, discovers their tools, and autonomously decides when and which tools to call based on your input — looping until it has everything it needs to give a full answer.
+
+## How it works
+
+1. The client spawns the MCP servers as child processes and fetches their available tools
+2. Your message + all tools are sent to GPT-4o
+3. If the model wants to call a tool, the client executes it via the MCP server and sends the result back
+4. This loops until the model has enough information to give a final answer
+5. Persistent conversation history is maintained across turns (last 20 messages)
+
+## Agent behaviour
+
+- **Weather questions** — answers are framed around motorcycle riding, including whether conditions are suitable for riding
+- **GitHub questions** — responses are professional, concise, and technical
+- **Off-topic messages** — replies with `NO_TOOLS_NEEDED` if no tool is required - this is where a simpler/cheaper AI model could be plugged in
+- **Toxic messages** — replies with `OFFENSIVE_LANGUAGE` - this could be handled differently, for example ban the user after a number of offensive queries
 
 ## Project Structure
 
 ```
-github-mcp-app/
-├── client/             # MCP client + OpenAI chat loop
+simple-mcp-playground/
+├── client/             # MCP client + GPT-4o agentic chat loop
 ├── weather-server/     # MCP server — weather tools (Open-Meteo API)
 ├── github-server/      # MCP server — GitHub tools (Octokit)
 ├── .env                # Your secrets (not committed)
@@ -38,11 +53,13 @@ Fill in your `.env`:
 
 The GitHub token needs the following scopes: `repo`, `read:user`.
 
-### 3. Run the client
+### 3. Run
 
 ```bash
 npm start
 ```
+
+Type `exit` or `q` to quit.
 
 ## Available Tools
 
@@ -50,21 +67,22 @@ npm start
 | Tool | Description |
 |---|---|
 | `get_current_weather` | Current temperature, humidity, wind, and precipitation for a city |
-| `get_forecast` | 7-day forecast for a city |
+| `get_forecast` | Weather forecast for a city over a given number of days |
 
 ### GitHub (via [Octokit](https://github.com/octokit/rest.js))
 | Tool | Description |
 |---|---|
 | `get_my_profile` | Authenticated user's GitHub profile and stats |
 | `list_my_repos` | Your repositories, sorted by stars |
-| `get_recent_commits` | Recent commits on a specific repo |
+| `get_recent_commits` | Recent commits by you on a specific repo |
 | `search_repos` | Search GitHub repositories by keyword |
 | `get_open_issues` | Open issues or pull requests for a repository |
 
 ## Example Usage
 
 ```
-You: What's the weather like in Tokyo?
-You: Show me my top 5 GitHub repos
-You: What are the open issues in microsoft/vscode?
+You: Should I ride my motorcycle in Barcelona this week?
+You: Give me a 3-day forecast for Berlin
+You: What are my github stats?
+You: What are the open pull requests in microsoft/vscode?
 ```
