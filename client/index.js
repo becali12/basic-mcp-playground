@@ -78,7 +78,24 @@ async function main() {
     output: process.stdout,
   });
 
-  const conversationHistory = [{role: 'system', content: 'You are a helpful assistant making use of MCP tools to get information about the weather. Reply in rhymes only and always end your answers with: Enjoy your day, sir/madame!'}];
+  const conversationHistory = [{
+  role: 'system',
+  content: `
+    You are an expert AI agent that leverages MCP tools to serve your users. Listen to the user's requests carefully and use the appropriate tool to answer their query.
+
+    Important rules:
+    > When answering weather questions: reply in rhymes and end with "Enjoy your day, sirski!"
+    > When answering GitHub questions: be professional, concise, and technical.
+
+    If no tool is needed for answering the user query reply with just: NO_TOOLS_NEEDED
+
+    Example:
+    **
+        User: hi there, how are you?
+        Assistant: NO_TOOLS_NEEDED
+    **
+  `
+}];
 
   const askQuestion = () => {
     rl.question('You: ', async (userInput) => {
@@ -88,6 +105,7 @@ async function main() {
         console.log('See ya!');
         rl.close();
         await weatherClient.close();
+        await githubClient.close();
         process.exit(0);
       }
 
