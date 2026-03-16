@@ -58,18 +58,21 @@ server.registerTool(
 server.registerTool(
   'get_forecast',
   {
-    title: 'Get 7-Day Forecast',
-    description: 'Get a 7-day weather forecast for a city',
+    title: 'Get Weather Forecast',
+    description: 'Get the weather forecast for a city for a period of time (in days)',
     inputSchema: {
       city: z.string().describe('City name'),
+      periodInDays: z.number().describe('Number of days for the forecast to cover')
     },
   },
-  async ({ city }) => {
+  async ({ city, periodInDays }) => {
     const { latitude, longitude, name, country } = await geocode(city);
+
+    console.log(periodInDays)
 
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
       `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code` +
-      `&temperature_unit=celsius&timezone=auto&forecast_days=7`;
+      `&temperature_unit=celsius&timezone=auto&forecast_days=${periodInDays}`;
 
     const res = await fetch(url);
     const data = await res.json();
