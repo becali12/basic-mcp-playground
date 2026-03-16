@@ -36,18 +36,18 @@ server.registerTool(
 
     const res = await fetch(url);
     const data = await res.json();
-    const c = data.current;
+    const currentWeather = data.current;
 
     return {
       content: [{
         type: 'text',
         text: JSON.stringify({
           location: `${name}, ${country}`,
-          temperature_c: c.temperature_2m,
-          humidity_percent: c.relative_humidity_2m,
-          wind_mph: c.wind_speed_10m,
-          precipitation_mm: c.precipitation,
-          weather_code: c.weather_code,
+          temperature_c: currentWeather.temperature_2m,
+          humidity_percent: currentWeather.relative_humidity_2m,
+          wind_mph: currentWeather.wind_speed_10m,
+          precipitation_mm: currentWeather.precipitation,
+          weather_code: currentWeather.weather_code,
         }, null, 2),
       }],
     };
