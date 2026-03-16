@@ -51,15 +51,23 @@ async function callTool(clientMap, toolName, toolInput) {
 async function main() {
 
   const weatherClient = await connectToServer(
-    'weather',
+    'weather-MCP',
     '../weather-server/index.js'
   );
 
+  const githubClient = await connectToServer(
+    'github-MCP', 
+    '../github-server/index.js'
+  );
+
   const weatherTools = await getTools(weatherClient);
-  const allTools = [...weatherTools]; // spreading because this will contain multiple server's tools soon
+  const githubTools = await getTools(githubClient);
+
+  const allTools = [...weatherTools, ...githubTools];
 
   const clientMap = [
     { client: weatherClient, tools: weatherTools },
+    { client: githubClient, tools: githubTools}
   ];
 
   console.log(`\n🛠  Available tools: ${allTools.map(t => t.function.name).join(', ')}`);
