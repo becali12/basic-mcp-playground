@@ -6,6 +6,8 @@ import { config } from 'dotenv';
 
 config({ path: '../.env' });
 
+const MAX_MEMORY_COUNT = 20; // max number of messages that should be kept in memory
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function connectToServer(name, serverPath) {
@@ -152,9 +154,9 @@ async function main() {
         const reply = response.choices[0].message.content ?? '(no response)';
         conversationHistory.push({ role: 'assistant', content: reply });
 
-        // keep only the last 20 messages to avoid hitting the token limit
-        if (conversationHistory.length > 20) {
-          conversationHistory.splice(0, conversationHistory.length - 20);
+        // keep only the last MAX_MEMORY_COUNT messages to avoid hitting the token limit
+        if (conversationHistory.length > MAX_MEMORY_COUNT) {
+          conversationHistory.splice(1, conversationHistory.length - MAX_MEMORY_COUNT);
         }
 
         console.log(`\nAssistant: ${reply}\n`);
