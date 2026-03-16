@@ -73,7 +73,7 @@ async function main() {
   ];
 
   console.log(`\n🛠  Available tools: ${allTools.map(t => t.function.name).join(', ')}`);
-  console.log('\nChat with GPT-4o (type "exit" to quit)\n');
+  console.log('\nChat with GPT-4o - type "exit" or "q" to quit.\n');
 
   const rl = readline.createInterface({
     input: process.stdin,
@@ -89,12 +89,17 @@ async function main() {
     > When answering weather questions: reply in rhymes and end with "Enjoy your day, sirski!"
     > When answering GitHub questions: be professional, concise, and technical.
 
-    If no tool is needed for answering the user query reply with just: NO_TOOLS_NEEDED
+    Standardised replies:
+    > If no tool is needed for answering the user query reply with just: NO_TOOLS_NEEDED
+    > If the user is being toxic, reply with just: OFFENSIVE_LANGUAGE
 
-    Example:
+    Examples:
     **
         User: hi there, how are you?
         Assistant: NO_TOOLS_NEEDED
+    **
+        User: bro you suck I hate you
+        Assistant: OFFENSIVE_LANGUAGE
     **
   `
 }];
@@ -103,7 +108,7 @@ async function main() {
     rl.question('You: ', async (userInput) => {
       userInput = userInput.trim();
       if (!userInput) return askQuestion();
-      if (userInput.toLowerCase() === 'exit') {
+      if (userInput.toLowerCase() === 'exit' || userInput.toLowerCase() === 'q') {
         console.log('See ya!');
         rl.close();
         await weatherClient.close();
