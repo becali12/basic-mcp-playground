@@ -22,18 +22,17 @@ server.registerTool(
     description: 'Get the authenticated GitHub user profile and stats',
   },
   async () => {
-    const { data } = await octokit.rest.users.getAuthenticated();
     return {
       content: [{
         type: 'text',
         text: JSON.stringify({
-          username: data.login,
-          name: data.name,
-          bio: data.bio,
-          public_repos: data.public_repos,
-          followers: data.followers,
-          following: data.following,
-          created_at: data.created_at,
+          username: authUser.login,
+          name: authUser.name,
+          bio: authUser.bio,
+          public_repos: authUser.public_repos,
+          followers: authUser.followers,
+          following: authUser.following,
+          created_at: authUser.created_at,
         }, null, 2),
       }],
     };
@@ -81,7 +80,7 @@ server.registerTool(
     title: 'Get Recent Commits',
     description: 'Get recent commits by the authenticated user on a specific repo',
     inputSchema: {
-      owner: z.string().describe('Repository owner (use your username for your own repos)'),
+      owner: z.string().describe(`Repository owner (default ${authUser.login})`),
       repo: z.string().describe('Repository name'),
       limit: z.number().optional().describe('Number of commits to fetch (default 10)'),
     },
