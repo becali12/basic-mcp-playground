@@ -1,0 +1,13 @@
+{
+  "name": "github-mcp-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node client/index.js"
+  },
+  "workspaces": [
+    "client",
+    "weather-server",
+    "github-server"
+  ]
+}

@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 import * as readline from 'node:readline';
 import { config } from 'dotenv';
 
-config({ path: '../.env' });
+config({ path: '.env' });
 
 const MAX_MEMORY_COUNT = 20; // max number of messages that should be kept in memory
 
@@ -54,12 +54,12 @@ async function main() {
 
   const weatherClient = await connectToServer(
     'weather-MCP',
-    '../weather-server/index.js'
+    './weather-server/index.js'
   );
 
   const githubClient = await connectToServer(
     'github-MCP', 
-    '../github-server/index.js'
+    './github-server/index.js'
   );
 
   const weatherTools = await getTools(weatherClient);

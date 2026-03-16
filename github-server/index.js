@@ -4,7 +4,7 @@ import { Octokit } from '@octokit/rest';
 import { z } from 'zod';
 import { config } from 'dotenv';
 
-config({ path: '../.env' });
+config({ path: '.env' });
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const { data: authUser } = await octokit.rest.users.getAuthenticated();
@@ -106,7 +106,7 @@ server.registerTool(
   }
 );
 
-// search repos
+// search repos within all github repos
 server.registerTool(
   'search_repos',
   {
